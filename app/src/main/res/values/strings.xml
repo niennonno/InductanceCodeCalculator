@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Inductance Code Calculator</string>
+    <string name="action_settings">Settings</string>
+    <string name="Black">0</string>
+    <string name="Brown">1</string>
+    <string name="Red">2</string>
+    <string name="Orange">3</string>
+    <string name="Yellow">4</string>
+    <string name="Green">5</string>
+    <string name="Blue">6</string>
+    <string name="Violet">7</string>
+    <string name="Grey">8</string>
+    <string name="White">9</string>
+    <string name="Black_Pow">x10^0</string>
+    <string name="Brown_Pow">x10^1</string>
+    <string name="Red_Pow">x10^2</string>
+    <string name="Orange_Pow">x10^3</string>
+    <string name="Yellow_Pow">x10^4</string>
+    <string name="Green_Pow">x10^5</string>
+    <string name="Blue_Pow">x10^6</string>
+    <string name="Violet_Pow">x10^7</string>
+    <string name="Grey_Pow">x10^8</string>
+    <string name="White_Pow">x10^9</string>
+    <string name="Gold_Pow">x10^-1</string>
+    <string name="Silver_Pow">x10^-2</string>
+</resources>
