@@ -9,9 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+
 import java.text.DecimalFormat;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button frBlack;
     Button srBlack;
@@ -39,22 +41,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button trGold;
     Button frWhite;
     Button srWhite;
-    Button trSilver
+    Button trSilver;
     Button tolGold;
     Button tolSilver;
     Button tolNone;
 
     TextView indValue, tolValue;
-    String suffix = "";
+    String suffix = "μ";
 
     int btnCount = 0;
     double value, first, second, multiplier, tolerance, tolVal;
 
     TextView firstBand, secondBand, thirdBand, fourthBand, firstBandValue, secondBandValue, thirdBandValue, fourthBandValue;
 
+    String projectToken = "6f44bfe4e1d0458d1a8f662fa42a44ba";
+    final MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String projectToken = "6f44bfe4e1d0458d1a8f662fa42a44ba";
+        final MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, projectToken);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -148,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+        mixpanel.track("Click");
+
         switch (v.getId()) {
             case R.id.fb_black:
                 ++btnCount;
@@ -164,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tb_black:
                 ++btnCount;
                 multiplier = 0;
-                suffix = "";
+                suffix = "μ";
                 calculate();
                 thirdBand.setBackgroundColor(getResources().getColor(R.color.colorBlack));
                 break;
@@ -184,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tb_brown:
                 ++btnCount;
                 multiplier = 1;
-                suffix = "";
+                suffix = "μ";
                 calculate();
                 thirdBand.setBackgroundColor(getResources().getColor(R.color.colorBrown));
                 break;
@@ -203,8 +214,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tb_red:
                 ++btnCount;
-                multiplier = 2;
-                suffix = "";
+                multiplier = -1;
+                suffix = "m";
                 calculate();
                 thirdBand.setBackgroundColor(getResources().getColor(R.color.colorRed));
                 break;
@@ -223,9 +234,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tb_orange:
                 ++btnCount;
-                suffix = "K";
-                multiplier = 3;
-                multiplier -= 3;
+                suffix = "m";
+                multiplier = 0;
                 calculate();
                 thirdBand.setBackgroundColor(getResources().getColor(R.color.colorOrange));
                 break;
@@ -244,9 +254,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.tb_yellow:
                 ++btnCount;
-                suffix = "K";
-                multiplier = 4;
-                multiplier -= 3;
+                suffix = "m";
+                multiplier = 1;
                 calculate();
                 thirdBand.setBackgroundColor(getResources().getColor(R.color.colorYellow));
                 break;
@@ -263,7 +272,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 calculate();
                 secondBand.setBackgroundColor(getResources().getColor(R.color.colorGreen));
                 break;
-
+            case R.id.tr_gold:
+                ++btnCount;
+                multiplier = -1;
+                suffix = "μ";
+                calculate();
+                thirdBand.setBackgroundColor(getResources().getColor(R.color.colorGold));
+                break;
             case R.id.fb_blue:
                 ++btnCount;
                 first = 6;
@@ -276,7 +291,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 calculate();
                 secondBand.setBackgroundColor(getResources().getColor(R.color.colorBlue));
                 break;
-
+            case R.id.tr_silver:
+                ++btnCount;
+                multiplier = -2;
+                suffix = "μ";
+                calculate();
+                thirdBand.setBackgroundColor(getResources().getColor(R.color.colorSilver));
+                break;
             case R.id.fb_violet:
                 ++btnCount;
                 first = 7;
@@ -340,14 +361,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DecimalFormat precision = new DecimalFormat("0");
         firstBandValue.setText(precision.format(first));
         secondBandValue.setText(precision.format(second));
-        if (suffix == "") {
+        if (suffix == "μ") {
             thirdBandValue.setText("10^" + precision.format(multiplier));
-        } else if (suffix == "K") {
+        } else if (suffix == "m") {
             thirdBandValue.setText("10^" + precision.format(multiplier + 3));
-        } else if (suffix == "M") {
-            thirdBandValue.setText("10^" + precision.format(multiplier + 6));
-        } else if (suffix == "G") {
-            thirdBandValue.setText("10^" + precision.format(multiplier + 9));
         }
 
         if (btnCount >= 3) {
