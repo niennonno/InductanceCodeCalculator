@@ -1,5 +1,8 @@
 package com.mapplinks.inductancecodecalculator;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     TextView indValue, tolValue;
     String suffix = "μ";
+
+    int clickCount=0;
 
     int btnCount = 0;
     double value, first, second, multiplier, tolerance, tolVal;
@@ -158,6 +164,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         mixpanel.track("Click");
+        ++clickCount;
+
+        if (clickCount >= 20) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id=com.mapplinks.inductancecodecalculator"));
+            if (!MyStartActivity(intent)) {
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?[Id]"));
+                if (!MyStartActivity(intent)) {
+                    Toast.makeText(MainActivity.this, "Could not open Android market, please install the market app.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
 
         switch (v.getId()) {
             case R.id.fb_black:
@@ -382,6 +401,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tolVal = value * tolerance / 100;
             double formattedNumber = Double.parseDouble(new DecimalFormat("#.##").format(tolVal));
             tolValue.setText("±" + formattedNumber + " " + suffix + "H");
+        }
+    }
+
+    private boolean MyStartActivity(Intent aIntent) {
+        try {
+            startActivity(aIntent);
+            return true;
+        } catch (ActivityNotFoundException e) {
+            return false;
         }
     }
 
